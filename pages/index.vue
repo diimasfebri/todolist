@@ -8,8 +8,11 @@
       <!-- input icon  setting -->
       <v-icon class="icon">mdi-dots-vertical</v-icon>
     </div>
+    <!-- script dibawah untuk manipulasi data.  -->
     <div class="todo-container">
-      <!-- logika looping sampai array todos abis -->
+      <!-- logika looping sampai array todos abis.
+      todos : array sementara.
+      todo : variabel pembawa nilai.-->
       <div v-for="todo in todos" :key="todo._id" class="todo">
         <div v-if="!todo.editMode" class="view">
           <div class="atas">
@@ -18,7 +21,7 @@
               <v-icon :class="todo.is_done ? 'done' : ''" class="icon"
                 >mdi-checkbox-marked-circle</v-icon
               >
-              <!-- jika is_done true, maka spab memiliki nama classnya sendiri -->
+              <!-- jika is_done true, maka span  memiliki nama classnya sendiri -->
               <span :class="todo.is_done ? 'done' : ''">{{ todo.title }}</span>
             </div>
             <div class="right">
@@ -42,6 +45,7 @@
     </div>
     <div class="grup">
       <!-- input data -->
+      <!-- "buka" sebagai trigger untuk membuka kolom atau tidak. -->
       <tombol v-if="!buka" @clicked="buka = true" />
       <add-task v-else @tutup="buka = false" @tambah-todo="tambah" />
     </div>
@@ -59,7 +63,7 @@ export default {
     return obj
   },
 
-  // akan jalan ketika sudah semua terjalankan.
+  // akan jalan ketika sudah semua terjalankan, script untuk update data yang dimanipulasi.
   mounted() {
     this.muatdata()
   },
@@ -70,7 +74,7 @@ export default {
       const { data } = await this.$axios.post(
         'http://localhost:8000/todos/create-tasks',
         todo
-      )
+      ) // script  input untuk masuk server.
       if (data.message === 'SUCCESS') {
         this.muatdata()
         this.buka = false // biar form add task tutup kembali.

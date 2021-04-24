@@ -59,6 +59,7 @@ router.delete('/delete/:_id', async (req, res) => {
 
 //update semua data 
 router.put('/update-todo/:_id', async (req,res) => {
+  //inisialisasi variabel terlebih dahulu
   const {
     body : { title, notes, is_done },
     params: { _id }
@@ -66,12 +67,13 @@ router.put('/update-todo/:_id', async (req,res) => {
   try {
     const task = await todo.findById({ _id }).exec()
     if (!task) throw new Error('TASK_NOT_FOUND')
-    if (notes && typeof notes === 'string') task.notes = notes
-    if (title && typeof title === 'string') task.title = title
+    if (typeof notes === 'string') task.notes = notes
+    if (typeof title === 'string') task.title = title
     if (is_done !== undefined && typeof is_done === 'boolean') task.is_done = is_done
     //script untuk update data 
     await todo.updateOne({ _id }, {
-      $set: task
+      //"task" sudah mencakup notes,titles,is_done seperti script diatas
+      $set: task 
     }).exec()
     return res.send({ message: 'SUCCESS', todo: task })
   } catch (e) {
@@ -82,9 +84,5 @@ router.put('/update-todo/:_id', async (req,res) => {
 
 
 })
-
-
-
-
 
 module.exports = router

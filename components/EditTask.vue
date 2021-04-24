@@ -50,6 +50,7 @@ export default {
   },
 
   mounted() {
+    // untuk mengecek notes apakah ada atau tidak, tujuannya uagar saat update
     if (this.todo.title) {
       this.title = this.todo.title
     }

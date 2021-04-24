@@ -1,5 +1,5 @@
 <template>
-  <div class="kolomAtas">
+  <div class="layout">
     <div class="toplayout">
       <div class="title">
         <v-icon class="icon">mdi-checkbox-marked-circle</v-icon>
@@ -27,7 +27,7 @@
 </template>
 
 <style lang="scss" scoped>
-.kolomAtas {
+.layout {
   position: relative;
   display: flex;
   justify-content: center;

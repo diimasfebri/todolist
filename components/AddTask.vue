@@ -7,6 +7,7 @@
         placeholder="What are you working on?"
       />
     </div>
+    <!-- bukanotes sebagai trigger -->
     <div v-if="bukanotes" class="notes">
       <textarea v-model="notes" placeholder="Some notes..." />
     </div>
@@ -46,7 +47,7 @@ export default {
         notes: this.notes,
         title: this.title,
       }
-      this.$emit('tambah-todo', todo)
+      this.$emit('tambah-todo', todo) // "tambah-todo" disini sebagai event,
     },
   },
 }
