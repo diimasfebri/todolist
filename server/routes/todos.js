@@ -21,6 +21,7 @@ router.post('/create-tasks', async (req, res) => {
    body: {title, notes}
  } = req
   try {
+    
     if (typeof title !== 'string' || title.length === 0)
      throw new Error('INVALID_REQUEST')
     if (notes.length === 0 && typeof notes !== 'string')

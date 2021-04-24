@@ -16,15 +16,26 @@
           <v-icon class="icon">mdi-cog</v-icon>
           <span> Setting </span>
         </div>
-        <div v-ripple class="button1">
+        <div v-ripple class="button1" @click="bukalogin = true">
           <v-icon class="icon">mdi-account</v-icon>
           <span> Login </span>
         </div>
       </div>
     </div>
     <nuxt />
+    <login v-if="bukalogin" />
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      bukalogin: false,
+    }
+  },
+}
+</script>
 
 <style lang="scss" scoped>
 .layout {

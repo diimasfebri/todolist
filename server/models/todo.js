@@ -12,6 +12,10 @@ const todoSchema = Schema({
     type: Date,
     required: true
   },
+  u_id: {
+    type: String,
+    required: true
+  },
   is_done: {
     type: Boolean,
     default: false

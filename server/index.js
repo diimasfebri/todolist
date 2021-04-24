@@ -6,6 +6,7 @@ const cors = require('cors')
 
 //insialisasi router
 const todos = require('./routes/todos')
+const users = require ('./routes/users')
 
 //inisialisasi
 const app = express()
@@ -30,6 +31,7 @@ app
 //panggil router  
 app
 .use('/todos', todos)
+.use('/users', users)
 
 
   //inisialisasi server
