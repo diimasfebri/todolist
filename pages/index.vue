@@ -63,16 +63,23 @@ export default {
     return obj
   },
 
-  // akan jalan ketika sudah semua terjalankan, script untuk update data yang dimanipulasi.
+  // agar akun selalu sign in secara realtime
+  computed: {
+    idUser() {
+      return this.$store.getters.idUser
+    },
+  },
+
+  // akan jalan ketika sudah semua terjalankan, script untuk update data.
   mounted() {
-    this.muatdata()
+    this.$root.$on('muat-data', this.muatdata)
   },
 
   methods: {
     // input dan delete data todo list
     async tambah(todo) {
       const { data } = await this.$axios.post(
-        'http://localhost:8000/todos/create-tasks',
+        `http://localhost:8000/todos/create-tasks?id=${this.idUser}`,
         todo
       ) // script  input untuk masuk server.
       if (data.message === 'SUCCESS') {
@@ -83,7 +90,7 @@ export default {
 
     async ubahIsDone(todo) {
       const { data } = await this.$axios.put(
-        `http://localhost:8000/todos/update-todo/${todo._id}`,
+        `http://localhost:8000/todos/update-todo/${todo._id}?id=${this.idUser}`,
         {
           // supaya yang awalnya false jadi true, dan sebaliknya bos
           is_done: !todo.is_done,
@@ -96,7 +103,7 @@ export default {
 
     async hapus(id) {
       const { data } = await this.$axios.delete(
-        `http://localhost:8000/todos/delete/${id}`
+        `http://localhost:8000/todos/delete/${id}?id=${this.idUser}`
       ) // pake backtick``
       if (data.message === 'SUCCESS') {
         this.muatdata()
@@ -105,7 +112,7 @@ export default {
 
     async sunting(todo) {
       const { data } = await this.$axios.put(
-        `http://localhost:8000/todos/update-todo/${todo._id}`,
+        `http://localhost:8000/todos/update-todo/${todo._id}?id=${this.idUser}`,
         todo
       )
       if (data.message === 'SUCCESS') {
@@ -115,8 +122,11 @@ export default {
       }
     },
 
+    // update data
     async muatdata() {
-      const { data } = await this.$axios.get('http://localhost:8000/todos')
+      const { data } = await this.$axios.get(
+        `http://localhost:8000/todos?id=${this.idUser}`
+      )
       if (data.message === 'SUCCESS') {
         this.todos = data.todos
       }

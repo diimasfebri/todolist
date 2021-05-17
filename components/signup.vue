@@ -1,7 +1,16 @@
 <template>
   <div class="popup">
-    <div class="login">
+    <div class="signup">
       <div class="input-container">
+        <div class="nama">
+          <span>Nama </span>
+          <input
+            v-model="nama"
+            placeholder="..."
+            class="input"
+            :class="pernahSubmit && !nama ? 'error' : ''"
+          />
+        </div>
         <div class="username">
           <span>Username </span>
           <input
@@ -21,9 +30,19 @@
             :class="pernahSubmit && !password ? 'error' : ''"
           />
         </div>
-        <div class="signup">
-          Don't have any account?
-          <p v-ripple @click="bukaSignUp">Sign Up</p>
+        <div class="re-password">
+          <span>retype Password</span>
+          <input
+            v-model="password2"
+            placeholder="..."
+            type="password"
+            class="input"
+            :class="pernahSubmit && !password2 ? 'error' : ''"
+          />
+        </div>
+        <div class="login">
+          Already have account?
+          <p v-ripple @click="bukaLogin">login</p>
         </div>
       </div>
       <div class="button-container">
@@ -33,15 +52,22 @@
           </div>
         </div>
         <div class="kanan">
+          <!-- validasi button, jika tak terisi maka tidak bisa klik -->
           <div
             v-ripple
             class="button primary"
             :style="
-              username && password ? '' : 'opacity: 0.5; pointer-events: none'
+              nama &&
+              username &&
+              password &&
+              password2 &&
+              password === password2
+                ? ''
+                : 'opacity: 0.5; pointer-events: none'
             "
-            @click="signin"
+            @click="signup"
           >
-            <span>Sign In</span>
+            <span>Sign Up</span>
           </div>
         </div>
       </div>
@@ -53,41 +79,33 @@
 export default {
   data() {
     return {
+      nama: '',
       username: '',
       password: '',
+      password2: '',
       pernahSubmit: false,
     }
-  },
-  computed: {
-    cek() {
-      if (!this.username || !this.password) return true
-      return false
-    },
-  },
-
-  mounted() {
-    // fungsi sebagai paramater,
-    this.$root.$on('clear-input', () => {
-      this.username = ''
-      this.password = ''
-    })
   },
 
   methods: {
     keluar() {
       this.$emit('tutup-popup')
     },
-    bukaSignUp() {
-      this.$emit('buka-sign-up')
+    bukaLogin() {
+      this.$emit('buka-login')
       this.$emit('tutup-popup')
     },
-    signin() {
+    signup() {
+      // cek kolom
       this.pernahSubmit = true
-      const user = {
-        username: this.username,
-        password: this.password,
+      if (this.password2 === this.password) {
+        const user = {
+          nama: this.nama,
+          username: this.username,
+          password: this.password,
+        }
+        this.$emit('user-signup', user) // "user-signup" disini sebagai event,
       }
-      this.$emit('user-signin', user) // "user-signin" disini sebagai event,
     },
   },
 }
@@ -106,7 +124,7 @@ export default {
   width: 100vw;
   height: 100vh;
   background: rgba(#000, 0.5);
-  .login {
+  .signup {
     position: relative;
     display: flex;
     justify-content: center;
@@ -144,7 +162,7 @@ export default {
         justify-content: flex-start;
         align-items: center;
       }
-      &.signup {
+      &.login {
         position: relative;
         display: flex;
         flex-direction: row;
@@ -170,18 +188,6 @@ export default {
         &.error {
           border-color: red;
         }
-        // &:not(:placeholder-shown) {
-        //   + .icon-container > .border {
-        //     transform: translateX(5px);
-        //   }
-        // }
-        // &:focus {
-        //   outline: none;
-        //   + .icon-container > .border {
-        //     transform: translateX(5px);
-        //     border-color: #6bc785;
-        //   }
-        // }
       }
     }
   }

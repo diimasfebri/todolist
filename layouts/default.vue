@@ -16,14 +16,29 @@
           <v-icon class="icon">mdi-cog</v-icon>
           <span> Setting </span>
         </div>
-        <div v-ripple class="button1" @click="bukalogin = true">
+        <div v-if="!idUser" v-ripple class="button1" @click="bukalogin = true">
           <v-icon class="icon">mdi-account</v-icon>
           <span> Login </span>
+        </div>
+        <div v-else v-ripple class="button1" @click="logout">
+          <v-icon class="icon">mdi-logout</v-icon>
+          <span>Sign Out</span>
         </div>
       </div>
     </div>
     <nuxt />
-    <login v-if="bukalogin" />
+    <login
+      v-if="bukalogin"
+      @tutup-popup="bukalogin = false"
+      @buka-sign-up="bukasignup = true"
+      @user-signin="masukAkun"
+    />
+    <signup
+      v-if="bukasignup"
+      @tutup-popup="bukasignup = false"
+      @buka-login="bukalogin = true"
+      @user-signup="tambahAkun"
+    />
   </div>
 </template>
 
@@ -32,7 +47,53 @@ export default {
   data() {
     return {
       bukalogin: false,
+      bukasignup: false,
     }
+  },
+
+  // agar akun selalu sign in secara realtime
+  computed: {
+    idUser() {
+      return this.$store.getters.idUser
+    },
+  },
+
+  methods: {
+    logout() {
+      this.$store.dispatch('setIdUser', '')
+    },
+
+    notEmpty(str) {
+      return str && str.toString().length ? '' : 'Kolom wajib diisi'
+    },
+
+    async tambahAkun(user) {
+      // "axios dkk" script untuk kirim data ke server
+      const { data } = await this.$axios.post(
+        'http://localhost:8000/users/daftar',
+        user
+      ) // script sign jika berhasil, langsung masuk form signin.
+      if (data.message === 'SUCCESS') {
+        this.bukasignup = false
+        this.bukalogin = true
+      }
+    },
+
+    async masukAkun(user) {
+      try {
+        const userLogged = await this.$store.dispatch('login', {
+          username: user.username,
+          password: user.password,
+        })
+        if (userLogged.message !== 'SUCCESS')
+          throw new Error(userLogged.message)
+        this.bukalogin = false
+        this.$root.$emit('muat-data') // muat data
+      } catch (e) {
+        window.alert(e.message)
+        this.$root.$emit('clear-input') // untuk menghapus lagi kolom inputan
+      }
+    },
   },
 }
 </script>
