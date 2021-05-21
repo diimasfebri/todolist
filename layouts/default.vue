@@ -68,19 +68,26 @@ export default {
     },
 
     async tambahAkun(user) {
-      // "axios dkk" script untuk kirim data ke server
-      const { data } = await this.$axios.post(
-        'http://localhost:8000/users/daftar',
-        user
-      ) // script sign jika berhasil, langsung masuk form signin.
-      if (data.message === 'SUCCESS') {
+      try {
+        const userSignUp = await this.$store.dispatch('signup', {
+          nama: user.nama,
+          username: user.username,
+          password: user.password,
+        })
+        if (userSignUp.message !== 'SUCCESS')
+          throw new Error(userSignUp.message)
+        //buka login baru
         this.bukasignup = false
         this.bukalogin = true
+      } catch (e) {
+        
+        window.alert(e.message)
       }
     },
 
     async masukAkun(user) {
       try {
+        // memanggil store untuk login
         const userLogged = await this.$store.dispatch('login', {
           username: user.username,
           password: user.password,

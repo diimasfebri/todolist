@@ -41,4 +41,22 @@ export const actions = {
       return { message: e.message }
     }
   },
+
+  async signup({ dispatch }, { nama, username, password }) {
+    try {
+      const { data } = await this.$axios.post(
+        'http://localhost:8000/users/daftar',
+        {
+          nama,
+          username,
+          password,
+        }
+      )
+      if (data.message !== 'SUCCESS') throw new Error(data.message)
+      dispatch('setIdUser', data.user)
+      return { message: 'SUCCESS' }
+    } catch (e) {
+      return { message: e.message }
+    }
+  },
 }
